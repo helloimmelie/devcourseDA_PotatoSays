@@ -8,7 +8,6 @@ CREATE TABLE `champion_participant_id` (
 CREATE TABLE `chapmion_stat_per_timestamp` (
 	`match_id`	BIGINT	NOT NULL,
 	`participant_id`	INT	NULL,
-	`champion_id`	INT	NULL,
 	`timestamp`	INT	NULL,
 	`abilityHaste`	FLOAT	NULL,
 	`abilityPower`	FLOAT	NULL,
