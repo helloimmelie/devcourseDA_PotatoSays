@@ -8,6 +8,8 @@ from operator import itemgetter
 
 from multiprocessing import Pool
 
+import traceback
+
 jsonDir = './data/match_timeline'
 matchDir = './data/match'
 fileOutputDir = './fileOutputs/'
@@ -52,6 +54,9 @@ def convertToDf(bucketData,  matchId):
     bucketDf = pd.DataFrame(bucketData)
     
     bucketDf['matchId'] = matchId
+
+    if 'type' in bucketDf.columns:
+        bucketDf = bucketDf.drop(columns=['type'])
     
     return bucketDf
 
@@ -119,24 +124,32 @@ def getData(element):
     matchPath = os.path.join(matchDir, element)
     matchTimelineDir = os.path.join(jsonDir, element)
     
-    if os.path.isfile(matchPath) and os.path.isfile(matchTimelineDir):
-        print(f'{element} is processing')
+    try:
+        if os.path.isfile(matchPath) and os.path.isfile(matchTimelineDir):
+            print(f'{element} is processing')
 
-        with open(matchTimelineDir) as f:
-            data = json.load(f)
-        with open(matchPath) as f:
-            matchData = json.load(f)  
+            with open(matchTimelineDir) as f:
+                data = json.load(f)
+            with open(matchPath) as f:
+                matchData = json.load(f)  
         
-        if convertSecondsMinutes(matchData['info']['gameDuration']) < 5:
-            print('5분 미만이라 처리하지 않음 ')
-            return
+            if convertSecondsMinutes(matchData['info']['gameDuration']) < 5:
+                print('5분 미만이라 처리하지 않음 ')
+                return
         
-        infoFrameData = data['info']['frames'] 
-        matchId, championDf = getChampionData(matchData)
-        getChampionStats(infoFrameData, championDf, matchId)
-        getgameLogData(infoFrameData, championDf, matchId)
-    else: 
-       return 
+            infoFrameData = data['info']['frames'] 
+            matchId, championDf = getChampionData(matchData)
+            getChampionStats(infoFrameData, championDf, matchId)
+            getgameLogData(infoFrameData, championDf, matchId)
+        else: 
+                return 
+    except  Exception as e:
+            with open("error_log.txt", "a") as log_file:
+                log_file.write(f"File: {element}\n")
+                log_file.write(f"Error: {str(e)}\n")
+                log_file.write(f"Traceback: {traceback.format_exc()}\n")
+                log_file.write("="*40 + "\n")
+    
     
     
 if __name__ == "__main__":
