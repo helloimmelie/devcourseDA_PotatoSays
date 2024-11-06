@@ -5,7 +5,7 @@ CREATE TABLE `champion_participant_id` (
 	PRIMARY KEY (match_id, participant_id)
 );
 
-CREATE TABLE `chapmion_stat_per_timestamp` (
+CREATE TABLE `champion_stat_per_timestamp` (
 	`match_id`	BIGINT	NOT NULL,
 	`participant_id`	INT	NULL,
 	`timestamp`	INT	NULL,
