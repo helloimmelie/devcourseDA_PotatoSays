@@ -7,8 +7,7 @@ drop table if exists `champion_participant_id`;
 CREATE TABLE `champion_participant_id` (
 	`match_id`	BIGINT	NOT NULL,
 	`participant_id`	INT	NULL,
-	`champion_id`	INT	NULL,
-	PRIMARY KEY (match_id, participant_id)
+	`champion_id`	INT	NULL
 );
 
 CREATE TABLE `champion_stat_per_timestamp` (
